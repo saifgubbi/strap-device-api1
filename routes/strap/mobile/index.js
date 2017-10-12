@@ -10,7 +10,7 @@ router.use('/release', require('./release'));
 router.use('/dispatch', require('./dispatch'));
 router.use('/receive', require('./receive'));
 router.use('/picking', require('./picking'));
-router.use('/invoice', require('./invoice'));
+router.use('/invList', require('./invList'));
 
 //router.use('/inquiry', require('./inquiry'));
 

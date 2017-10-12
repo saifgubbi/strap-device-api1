@@ -36,17 +36,17 @@ function getData(req, res) {
     
      function getInvoice(conn, cb) {
         console.log("Getting List");
-        let selectStatement = `SELECT ih.invoice_num as "invId",ih.inv_dt as "invDt",part_no as "partNo",sum(qty) as "qty"
+        let selectStatement = `SELECT ih.invoice_num as "invId",ih.inv_dt as "invDt",part_no as "partNo",sum(qty) as "qty",status as "status"
                                   FROM INV_HDR_T IH,INV_LINE_T IL,LOCATIONS_T L
                                  WHERE ih.invoice_num=il.invoice_num
                                    AND ih.from_loc=l.loc_id
                                    AND part_no IS NOT NULL
                                    AND ih.part_grp='${partGrp}'${locType}
-                                  GROUP BY ih.invoice_num,ih.inv_dt,part_no`;
+                                  GROUP BY ih.invoice_num,ih.inv_dt,part_no,status`;
         console.log(selectStatement);
 
         let bindVars = [];
-
+        
         conn.execute(selectStatement
                 , bindVars, {
                     outFormat: oracledb.OBJECT, // Return the result as Object
@@ -95,15 +95,16 @@ function getData(req, res) {
                 cb(err, conn);
             } else {
                 result.rows.forEach(function (row) {
-                    let obj = {};
-                    obj.count = row.count;
-                    obj.status = row.status;
-                    obj.attr = [];
+                    let obj = {attr:{}};
+                    obj.attr.count = row.count;
+                    obj.attr.status = row.status;
+                    obj.children = [];
                     console.log(invArr);
                     invArr.forEach(function (inv) {
-                        if (inv.status === obj.status) {
+                        if (inv.status === obj.attr.status) {
                             console.log(inv);
-                            obj.attr.push(inv);
+                            var tempObj = {attr:inv}
+                            obj.children.push(tempObj);
                         }
                     });
                     console.log(statArr);
