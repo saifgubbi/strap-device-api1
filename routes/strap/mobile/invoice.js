@@ -36,13 +36,13 @@ function getData(req, res) {
     
      function getInvoice(conn, cb) {
         console.log("Getting List");
-        let selectStatement = `SELECT ih.invoice_num as "invId",ih.inv_dt as "invDt",part_no as "partNo",sum(qty) as "qty",status as "status"
+        let selectStatement = `SELECT ih.invoice_num as "invId",ih.inv_dt as "invDt",part_no as "partNo",sum(qty) as "qty"
                                   FROM INV_HDR_T IH,INV_LINE_T IL,LOCATIONS_T L
                                  WHERE ih.invoice_num=il.invoice_num
                                    AND ih.from_loc=l.loc_id
                                    AND part_no IS NOT NULL
                                    AND ih.part_grp='${partGrp}'${locType}
-                                  GROUP BY ih.invoice_num,ih.inv_dt,part_no,status`;
+                                  GROUP BY ih.invoice_num,ih.inv_dt,part_no`;
         console.log(selectStatement);
 
         let bindVars = [];
