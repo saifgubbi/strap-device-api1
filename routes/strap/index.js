@@ -5,7 +5,7 @@ var router = express.Router();
 router.use('/test', require('./test'));
 
 router.use('/rfid', require('./rfid'));
-
+router.use('/mobile', require('./mobile'));
 
 //router.use('/inquiry', require('./inquiry'));
 
