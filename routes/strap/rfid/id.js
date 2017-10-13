@@ -36,7 +36,9 @@ function idInfo(req, res) {
             type = 'Pallet';
         }
         if (!table) {
-            cb({"err": "Invalid ID selected"}, conn);
+            //cb({"err": "Invalid ID selected"}, conn);
+            res.status(401).send({"err": "Invalid ID selected"});//Added for response set
+            cb(null, conn);
         } else {
 
             let sqlStatement = `SELECT * FROM ${table} WHERE ${idLabel}='${req.query.id}'`;
@@ -51,7 +53,9 @@ function idInfo(req, res) {
                     cb(err, conn);
                 } else {
                     if (result.rows.length === 0) {
-                        cb({'err': 'ID not found in ' + table}, conn);
+                       // cb({'err': 'ID not found in ' + table}, conn);
+                        res.status(401).send({'err': 'ID not found in ' + table});//Added for response set
+                         cb(null, conn);
                     } else {
                         let idDet = {};
                         result.rows.forEach(function (row) {
@@ -62,7 +66,7 @@ function idInfo(req, res) {
                             idDet.type = type;
                         });
                         res.writeHead(200, {'Content-Type': 'application/json'});
-                        res.end(JSON.stringify(idDet));
+                        res.end(JSON.stringify(idDet).replace(null, '"NULL"'));
                         cb(null, conn);
                     }
                 }
@@ -78,7 +82,7 @@ function idInfo(req, res) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.writeHead(400, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(err));
                 }
                 if (conn)

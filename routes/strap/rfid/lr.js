@@ -56,7 +56,7 @@ function getDipatchLR(req, res) {
                         lrArr.push(lrObj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});
-                    res.end(JSON.stringify(lrArr));
+                    res.end(JSON.stringify(lrArr).replace(null, '"NULL"'));
                     cb(null, conn);
                 }
             }
@@ -71,7 +71,7 @@ function getDipatchLR(req, res) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.writeHead(400, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(err));
                 }
                 if (conn)
@@ -120,7 +120,7 @@ function getReceiveLR(req, res) {
                         lrArr.push(lrObj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});
-                    res.end(JSON.stringify(lrArr));
+                    res.end(JSON.stringify(lrArr).replace(null, '"NULL"'));
                     cb(null, conn);
                 }
             }
@@ -135,7 +135,7 @@ function getReceiveLR(req, res) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.writeHead(400, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(err));
                 }
                 if (conn)
@@ -174,7 +174,9 @@ function getLRDetails(req, res) {
                 cb(err, conn);
             } else {
                 if (result.rows.length === 0) {
-                    cb({err: 'No Bins/Pallets found for this LR'}, conn);
+                    //cb({err: 'No Bins/Pallets found for this LR'}, conn);
+                    res.status(401).send({err: 'No Bins/Pallets found for this LR'});//Added for response set
+                    cb(null, conn);
                 } else {
                     let objArr = [];
                     result.rows.forEach(function (row) {
@@ -187,7 +189,7 @@ function getLRDetails(req, res) {
                         objArr.push(obj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});
-                    res.end(JSON.stringify(objArr));
+                    res.end(JSON.stringify(objArr).replace(null, '"NULL"'));
                     cb(null, conn);
                 }
             }
@@ -202,7 +204,7 @@ function getLRDetails(req, res) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.writeHead(400, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(err));
                 }
                 if (conn)

@@ -38,7 +38,9 @@ function pickListInfo(req, res) {
                 cb(err, conn);
             } else {
                 if (result.rows.length === 0) {
-                    cb({err: 'No Active Picklist found for this Part Group'}, conn);
+                    //cb({err: 'No Active Picklist found for this Part Group'}, conn);
+                    res.status(401).send({err: 'No Active Picklist found for this Part Group'});//Added for response set
+                    cb(null, conn);
                 } else {
                     let objArr = [];
                     result.rows.forEach(function (row) {
@@ -51,7 +53,7 @@ function pickListInfo(req, res) {
                         objArr.push(obj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});
-                    res.end(JSON.stringify(objArr));
+                    res.end(JSON.stringify(objArr).replace(null, '"NULL"'));
                     cb(null, conn);
                 }
             }
@@ -66,7 +68,7 @@ function pickListInfo(req, res) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.writeHead(400, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(err));
                 }
                 if (conn)

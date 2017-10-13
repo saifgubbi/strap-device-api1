@@ -46,7 +46,9 @@ function serialInfo(req, res) {
                 cb(err, conn);
             } else {
                 if (result.rows.length === 0) {
-                    cb({err: 'No Active Data found for this Part No'}, conn);
+                    //cb({err: 'No Active Data found for this Part No'}, conn);
+                    res.status(401).send({err: 'No Active Data found for this Part No'});//Added for response set
+                    cb(null, conn);
                 } else {
                     let objArr = [];
                     result.rows.forEach(function (row) {
@@ -70,7 +72,7 @@ function serialInfo(req, res) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.writeHead(500, {'Content-Type': 'application/json'});
+                    res.writeHead(400, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify(err));
                 }
                 if (conn)
@@ -138,7 +140,7 @@ function insertEvents(req, res, sqlStatement, bindArr) {
         }, function (err) {
             if (err) {
                 console.log("Event Insert Error");
-                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.writeHead(400, {'Content-Type': 'application/json'});
                 errArray.push({row: 0, err: err});
                 res.end(`err:${err}}`);
             } else {
@@ -156,7 +158,7 @@ function insertEvents(req, res, sqlStatement, bindArr) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.status(500).json({message: err});
+                    res.status(400).json({message: err});
                 }
                 console.log("Done Waterfall");
                 if (conn)
@@ -236,7 +238,7 @@ function insertEventsSer(req, res, sqlStatement, bindArr) {
         }, function (err) {
             if (err) {
                 console.log("Event Insert Error");
-                res.writeHead(500, {'Content-Type': 'application/json'});
+                res.writeHead(400, {'Content-Type': 'application/json'});
                 errArray.push({row: 0, err: err});
                 res.end(`errorMsg:${err}}`);
             } else {
@@ -254,7 +256,7 @@ function insertEventsSer(req, res, sqlStatement, bindArr) {
             function (err, conn) {
                 if (err) {
                     console.error("In waterfall error cb: ==>", err, "<==");
-                    res.status(500).json({message: err});
+                    res.status(400).json({message: err});
                 }
                 console.log("Done Waterfall");
                 if (conn)

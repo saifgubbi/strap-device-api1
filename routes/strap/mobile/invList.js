@@ -21,7 +21,7 @@ function getData(req, res) {
     if (req.query.locType === 'Transit') {
         locType = ` AND l.type IN ('Plant','Warehouse') AND ih.status in ('Dispatched','Reached')`;
     }
-    if (req.query.partNo === 'Warehouse') {
+    if (req.query.locType === 'Warehouse') {
         locType = ` AND l.type='Warehouse' AND ih.status not in ('Dispatched','Reached')`;
     }
     var statArr = [];
@@ -99,10 +99,10 @@ function getData(req, res) {
                     obj.attr.count = row.count;
                     obj.attr.status = row.status;
                     obj.children = [];
-                    console.log(invArr);
+                  //  console.log(invArr);
                     invArr.forEach(function (inv) {
                         if (inv.status === obj.attr.status) {
-                            console.log(inv);
+                            //console.log(inv);
                             var tempObj = {attr:inv}
                             obj.children.push(tempObj);
                         }
