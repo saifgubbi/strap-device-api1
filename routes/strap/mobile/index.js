@@ -11,7 +11,7 @@ router.use('/dispatch', require('./dispatch'));
 router.use('/receive', require('./receive'));
 router.use('/picking', require('./picking'));
 router.use('/invList', require('./invList'));
-
+router.use('/invHist', require('./invHist'));
 //router.use('/inquiry', require('./inquiry'));
 
 router.get('/', function (req, res) {
