@@ -58,11 +58,11 @@ function idInfo(req, res) {
                             idDet.id = row.BIN_ID || row.PALLET_ID;
                             idDet.status = row.STATUS;
                             idDet.partNo = row.PART_NO;
-                            idDet.qty = row.QTY;
+                            idDet.qty = row.QTY||0;
                             idDet.type = type;
                         });
                         res.writeHead(200, {'Content-Type': 'application/json'});
-                        res.end(JSON.stringify(idDet));
+                        res.end(JSON.stringify(idDet).replace(null, '"NULL"'));
                         cb(null, conn);
                     }
                 }

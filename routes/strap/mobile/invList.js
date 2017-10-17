@@ -62,7 +62,7 @@ function getData(req, res) {
                             obj.invId = row.invId;
                             obj.invDt = row.invDt;
                             obj.partNo = row.partNo;
-                            obj.qty = row.qty;
+                            obj.qty = row.qty||0;
                             obj.status = row.status;
                             invArr.push(obj);
                     });

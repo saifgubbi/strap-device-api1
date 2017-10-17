@@ -33,6 +33,7 @@ function loginUser(req, res) {
     };
 
     function doSelectUser(conn, cb) {
+        console.log(req.body.userId);
         let sqlStatement = `SELECT * FROM USERS_T WHERE USER_ID='${userId}'`;
         let bindVars = [];
         //  console.log(bindVars.join());
@@ -93,16 +94,17 @@ function loginUser(req, res) {
         user.userId = userDB.USER_ID;
         user.name = userDB.NAME;
         user.email = userDB.EMAIL;
-        user.phone = userDB.PHONE;
+        user.phone = userDB.PHONE||0;      
         user.role = userDB.ROLE;
         user.locId = userDB.LOC_ID;
         user.partGrp = userDB.PART_GRP;
 
         var token = 'JWT ' + jwt.sign({username: userDB.USER_ID}, 'somesecretforjswt', {expiresIn: 10080});
         user.token = token;        
-        //res.writeHead(200, {'Content-Type': 'application/json'});
+        res.writeHead(200, {'Content-Type': 'application/json'});
        // res.end(JSON.stringify(user)); 
-        res.json(user);
+       // res.json(user);
+        res.end(JSON.stringify(user).replace(null, '"NULL"'));
         }
          else
             cb(null, conn);

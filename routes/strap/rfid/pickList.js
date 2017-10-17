@@ -49,7 +49,7 @@ function pickListInfo(req, res) {
                         obj.pickDate = row.PICK_DATE;
                         obj.invId = row.INVOICE_NUM;
                         obj.partNo = row.PART_NO;
-                        obj.qty = row.QTY;
+                        obj.qty = row.QTY||0;
                         objArr.push(obj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});

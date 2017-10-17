@@ -52,7 +52,7 @@ function getDipatchLR(req, res) {
                     result.rows.forEach(function (row) {
                         let lrObj = {};
                         lrObj.lr = row.LR_NO;
-                        lrObj.invCount = row.INV_COUNT;
+                        lrObj.invCount = row.INV_COUNT||0;
                         lrArr.push(lrObj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});
@@ -116,7 +116,7 @@ function getReceiveLR(req, res) {
                     result.rows.forEach(function (row) {
                         let lrObj = {};
                         lrObj.lr = row.LR_NO;
-                        lrObj.invCount = row.INV_COUNT;
+                        lrObj.invCount = row.INV_COUNT||0;
                         lrArr.push(lrObj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});
@@ -185,7 +185,7 @@ function getLRDetails(req, res) {
                         obj.type = row.OBJ_TYPE;
                         obj.invId = row.INVOICE_NUM;
                         obj.partNo = row.PART_NO;
-                        obj.qty = row.QTY;
+                        obj.qty = row.QTY||0;
                         objArr.push(obj);
                     });
                     res.writeHead(200, {'Content-Type': 'application/json'});

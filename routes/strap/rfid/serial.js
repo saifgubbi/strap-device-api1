@@ -5,15 +5,12 @@ var op = require('../../../oracleDBOps');
 var oracledb = require('oracledb');
 
 router.get('/', function (req, res) {
-    idInfo(req, res);
+    serialInfo(req, res);
 });
 
 module.exports = router;
 
-function idInfo(req, res) {
-    let table;
-    let idLabel;
-    let type;
+function serialInfo(req, res) {
 
     var doconnect = function (cb) {
         op.doConnectCB(cb);
@@ -24,24 +21,8 @@ function idInfo(req, res) {
     };
 
     var doSelect = function (conn, cb) {
-
-        if (req.query.id.charAt(0) === '0') {
-            table = 'BINS_T';
-            idLabel = 'BIN_ID';
-            type = 'Bin';
-        }
-        if (req.query.id.charAt(0) === '1') {
-            table = 'PALLETS_T';
-            idLabel = 'PALLET_ID';
-            type = 'Pallet';
-        }
-        if (!table) {
-            //cb({"err": "Invalid ID selected"}, conn);
-            res.status(401).send({"err": "Invalid ID selected"});//Added for response set
-            cb(null, conn);
-        } else {
-
-            let sqlStatement = `SELECT * FROM ${table} WHERE ${idLabel}='${req.query.id}'`;
+          var serial=[];
+          let sqlStatement = `SELECT * FROM SERIAL_T WHERE BIN_ID='${req.query.binId}'`;
             console.log(sqlStatement);
 
             conn.execute(sqlStatement
@@ -54,24 +35,22 @@ function idInfo(req, res) {
                 } else {
                     if (result.rows.length === 0) {
                        // cb({'err': 'ID not found in ' + table}, conn);
-                        res.status(401).send({'err': 'ID not found in ' + table});//Added for response set
+                        res.status(401).send({'err': 'Serial Number not available for bin ID :' + req.query.binId});//Added for response set
                          cb(null, conn);
                     } else {
-                        let idDet = {};
+                        //let obj=[];                       
                         result.rows.forEach(function (row) {
-                            idDet.id = row.BIN_ID || row.PALLET_ID;
-                            idDet.status = row.STATUS;
-                            idDet.partNo = row.PART_NO;
-                            idDet.qty = row.QTY||0;
-                            idDet.type = type;
+                            var seriesObj = { serialNum:row.SERIAL_NUM||0}; 
+                            serial.push(seriesObj);
                         });
+                              
+                        //serial.push(seriesObj);
                         res.writeHead(200, {'Content-Type': 'application/json'});
-                        res.end(JSON.stringify(idDet).replace(null, '"NULL"'));
+                        res.end(JSON.stringify(serial).replace(null, '"NULL"'));
                         cb(null, conn);
                     }
                 }
             });
-        }
     };
 
     async.waterfall(
